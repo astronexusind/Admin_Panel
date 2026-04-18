@@ -1,0 +1,62 @@
+[
+  {
+    "label": "Dashboard",
+    "href": "/dashboard",
+    "icon": "LayoutDashboard",
+    "description": "Overview, charts, and AI insights"
+  },
+  {
+    "label": "Products",
+    "href": "/products",
+    "icon": "Package",
+    "description": "Catalog management"
+  },
+  {
+    "label": "Orders",
+    "href": "/orders",
+    "icon": "ShoppingCart",
+    "description": "Status and lifecycle tracking"
+  },
+  {
+    "label": "Users",
+    "href": "/users",
+    "icon": "Users",
+    "description": "Customer accounts and moderation"
+  },
+  {
+    "label": "Categories",
+    "href": "/categories",
+    "icon": "Layers3",
+    "description": "Taxonomy and visibility"
+  },
+  {
+    "label": "CMS",
+    "href": "/cms",
+    "icon": "FileText",
+    "description": "Content and banners"
+  },
+  {
+    "label": "Discounts",
+    "href": "/discounts",
+    "icon": "BadgePercent",
+    "description": "Promotions and offers"
+  },
+  {
+    "label": "Feedback",
+    "href": "/feedback",
+    "icon": "MessageSquare",
+    "description": "Customer reviews and moderation"
+  },
+  {
+    "label": "Astrology Services",
+    "href": "/astrology-services",
+    "icon": "Sparkles",
+    "description": "Service toggles and premium settings"
+  },
+  {
+    "label": "Admins",
+    "href": "/admins",
+    "icon": "ShieldCheck",
+    "description": "Admin access and password updates"
+  }
+]

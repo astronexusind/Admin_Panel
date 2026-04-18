@@ -1,0 +1,187 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+html[data-theme="dark"] {
+  --background: 2 6 23;
+  --background-alt: 3 7 18;
+  --card: 11 17 32;
+  --text: 226 232 240;
+  --muted: 148 163 184;
+  --border: 30 41 59;
+  --primary: 139 92 246;
+  --accent: 245 158 11;
+  --success: 34 197 94;
+  --danger: 248 113 113;
+  --stars-opacity: 0.55;
+}
+
+html[data-theme="light"] {
+  --background: 248 250 252;
+  --background-alt: 241 245 249;
+  --card: 255 255 255;
+  --text: 15 23 42;
+  --muted: 71 85 105;
+  --border: 203 213 225;
+  --primary: 79 70 229;
+  --accent: 37 99 235;
+  --success: 22 163 74;
+  --danger: 220 38 38;
+  --stars-opacity: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  color: rgb(var(--text));
+  background:
+    radial-gradient(circle at top, rgb(var(--primary) / 0.2), transparent 28%),
+    radial-gradient(circle at 20% 80%, rgb(var(--accent) / 0.12), transparent 26%),
+    linear-gradient(180deg, rgb(var(--background)) 0%, rgb(var(--background-alt)) 100%);
+}
+
+html[data-theme="light"] body {
+  background:
+    radial-gradient(circle at top, rgb(var(--primary) / 0.08), transparent 30%),
+    linear-gradient(180deg, rgb(var(--background)) 0%, rgb(var(--background-alt)) 100%);
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.1) 0 1px, transparent 1px),
+    radial-gradient(circle at 85% 25%, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px),
+    radial-gradient(circle at 70% 75%, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px),
+    radial-gradient(circle at 40% 60%, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px);
+  background-size: 180px 180px, 240px 240px, 220px 220px, 260px 260px;
+  content: "";
+  opacity: var(--stars-opacity);
+  pointer-events: none;
+}
+
+html[data-theme="light"] body::before {
+  opacity: 0;
+}
+
+::selection {
+  color: rgb(var(--text));
+  background: rgb(var(--primary) / 0.35);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgb(var(--primary) / 0.8), rgb(var(--accent) / 0.6));
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(2, 6, 23, 0.6);
+}
+
+html[data-theme="light"] ::-webkit-scrollbar-track {
+  background: rgba(148, 163, 184, 0.2);
+}
+
+html[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgb(var(--primary) / 0.6), rgb(var(--accent) / 0.5));
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display tracking-tight;
+  }
+
+  p {
+    @apply text-slate-300;
+  }
+
+  a,
+  button,
+  input,
+  textarea,
+  select {
+    @apply transition duration-200;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply rounded-3xl border border-white/10 bg-card/80 shadow-card backdrop-blur-xl;
+    box-shadow:
+      0 16px 60px rgb(2 6 23 / 0.45),
+      inset 0 1px 0 rgb(255 255 255 / 0.04);
+  }
+
+  .orb {
+    position: absolute;
+    border-radius: 999px;
+    filter: blur(80px);
+    pointer-events: none;
+  }
+
+  .content-container {
+    @apply mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8;
+  }
+}
+
+html[data-theme="light"] .glass-panel {
+  @apply border-slate-200 bg-white;
+  box-shadow:
+    0 12px 40px rgb(15 23 42 / 0.1),
+    inset 0 1px 0 rgb(255 255 255 / 0.8);
+}
+
+html[data-theme="light"] .text-white {
+  color: rgb(15 23 42) !important;
+}
+
+html[data-theme="light"] .text-slate-500,
+html[data-theme="light"] .text-slate-400,
+html[data-theme="light"] .text-slate-300 {
+  color: rgb(71 85 105) !important;
+}
+
+html[data-theme="light"] .bg-white\/5,
+html[data-theme="light"] .bg-white\/10,
+html[data-theme="light"] .bg-black\/10,
+html[data-theme="light"] .bg-black\/15,
+html[data-theme="light"] .bg-slate-900\/50 {
+  background-color: rgb(248 250 252 / 0.9) !important;
+}
+
+html[data-theme="light"] .border-white\/10,
+html[data-theme="light"] .border-white\/15,
+html[data-theme="light"] .border-primary\/20,
+html[data-theme="light"] .border-primary\/30 {
+  border-color: rgb(203 213 225) !important;
+}
+
+html[data-theme="light"] .shadow-card,
+html[data-theme="light"] [class*="shadow-"] {
+  box-shadow: 0 10px 32px rgb(15 23 42 / 0.12) !important;
+}
+
+html[data-theme="light"] .bg-primary.text-white,
+html[data-theme="light"] .bg-accent.text-white {
+  color: white !important;
+}
