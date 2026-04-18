@@ -1,5 +1,5 @@
 {
-  "baseUrl": "https://astronexus-backend.onrender.com",
+  "baseUrl": "https://astronexus-live.onrender.com",
   "auth": {
     "login": "/api/admin/auth/login",
     "all": "/api/admin/auth/all",
