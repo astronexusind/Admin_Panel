@@ -18,6 +18,12 @@ export async function createUser(payload: Record<string, unknown>) {
   return getMessageFromResponse(response.data, "User created successfully.");
 }
 
+export async function createAstrologyUser(payload: Record<string, unknown>) {
+  const response = await api.post(endpoints.users.createAstrology, payload);
+
+  return getMessageFromResponse(response.data, "Astrology user created successfully.");
+}
+
 export async function blockUser(id: string) {
   const response = await api.patch(replacePathParam(endpoints.users.block, "id", id));
 

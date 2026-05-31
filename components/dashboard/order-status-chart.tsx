@@ -14,11 +14,22 @@ export function OrderStatusChart({ data }: { data: PiePoint[] }) {
         <CardTitle>Order Constellation</CardTitle>
         <CardDescription>Status distribution across the current order pipeline.</CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="h-[280px]">
+      <CardContent className="grid gap-6 lg:grid-cols-2 items-center">
+        <div className="h-[280px] flex items-center justify-center">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
-              <Pie data={data} dataKey="value" nameKey="name" innerRadius={70} outerRadius={100} paddingAngle={4}>
+              <Pie
+                data={data}
+                dataKey="value"
+                nameKey="name"
+                innerRadius="50%"
+                outerRadius="80%"
+                paddingAngle={2}
+                labelLine={false}
+                isAnimationActive={false}
+                startAngle={90}
+                endAngle={-270}
+              >
                 {data.map((entry, index) => (
                   <Cell key={entry.name} fill={colors[index % colors.length]} />
                 ))}
@@ -35,7 +46,11 @@ export function OrderStatusChart({ data }: { data: PiePoint[] }) {
         </div>
         <div className="space-y-3">
           {data.map((entry, index) => (
-            <div key={entry.name} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+            <div
+              key={entry.name}
+              className="flex items-center justify-between rounded-lg border border-white/6 bg-card/60 px-4 py-3"
+              style={{ gap: 12 }}
+            >
               <div className="flex items-center gap-3">
                 <span
                   className="h-3 w-3 rounded-full"

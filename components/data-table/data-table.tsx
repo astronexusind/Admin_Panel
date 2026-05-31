@@ -12,6 +12,12 @@ import { Select } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { TableColumn, TableFilter } from "@/lib/types";
 
+type TableSortOption<T> = {
+  label: string;
+  value: string;
+  compare: (left: T, right: T) => number;
+};
+
 function stringifyValue(value: unknown) {
   if (value === null || value === undefined) {
     return "";
@@ -31,6 +37,7 @@ export function DataTable<T>({
   columns,
   searchKeys = [],
   filters = [],
+  sortOptions = [],
   loading,
   primaryAction,
   renderRowActions,
@@ -43,6 +50,7 @@ export function DataTable<T>({
   columns: TableColumn<T>[];
   searchKeys?: string[];
   filters?: TableFilter<T>[];
+  sortOptions?: TableSortOption<T>[];
   loading?: boolean;
   primaryAction?: React.ReactNode;
   renderRowActions?: (row: T) => React.ReactNode;
@@ -53,10 +61,22 @@ export function DataTable<T>({
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [filterState, setFilterState] = useState<Record<string, string>>({});
+  const [sortValue, setSortValue] = useState(sortOptions[0]?.value ?? "");
 
   useEffect(() => {
     setPage(1);
-  }, [search, filterState, pageSize, data.length]);
+  }, [search, filterState, pageSize, sortValue, data.length]);
+
+  useEffect(() => {
+    if (sortOptions.length === 0) {
+      setSortValue("");
+      return;
+    }
+
+    if (!sortOptions.some((option) => option.value === sortValue)) {
+      setSortValue(sortOptions[0].value);
+    }
+  }, [sortOptions, sortValue]);
 
   const filteredData = data.filter((row) => {
     const matchesSearch =
@@ -76,29 +96,33 @@ export function DataTable<T>({
     return matchesSearch && matchesFilters;
   });
 
-  const totalPages = Math.max(1, Math.ceil(filteredData.length / pageSize));
+  const sortedData = sortOptions.length === 0 || !sortValue
+    ? filteredData
+    : [...filteredData].sort(sortOptions.find((option) => option.value === sortValue)?.compare);
+
+  const totalPages = Math.max(1, Math.ceil(sortedData.length / pageSize));
   const currentPage = Math.min(page, totalPages);
-  const paginated = filteredData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const paginated = sortedData.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   return (
     <Card>
-      <CardHeader className="gap-4 border-b border-white/10 pb-6">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="space-y-2">
+      <CardHeader className="gap-4 border-b border-white/10 pb-5">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div className="space-y-1.5">
             <CardTitle>{title}</CardTitle>
-            <CardDescription>{description}</CardDescription>
+            <CardDescription className="max-w-2xl">{description}</CardDescription>
           </div>
           {primaryAction}
         </div>
 
-        <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
-          <div className="flex flex-1 flex-col gap-3 md:flex-row">
+        <div className="flex flex-col gap-3 xl:flex-row xl:items-end xl:justify-between">
+          <div className="flex flex-1 flex-col gap-3 md:flex-row md:items-center">
             <div className="relative md:max-w-sm md:flex-1">
               <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
               <Input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search records..."
+                placeholder="Search records"
                 className="pl-10"
               />
             </div>
@@ -122,9 +146,22 @@ export function DataTable<T>({
                 ))}
               </Select>
             ))}
+            {sortOptions.length > 0 ? (
+              <Select
+                value={sortValue}
+                onChange={(event) => setSortValue(event.target.value)}
+                className="md:max-w-[220px]"
+              >
+                {sortOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </Select>
+            ) : null}
           </div>
           <div className="flex items-center gap-3">
-            <Badge variant="neutral">{filteredData.length} results</Badge>
+            <Badge variant="neutral">{sortedData.length} results</Badge>
             <Select value={String(pageSize)} onChange={(event) => setPageSize(Number(event.target.value))} className="w-[120px]">
               {[10, 20, 50].map((size) => (
                 <option key={size} value={size}>
@@ -137,7 +174,7 @@ export function DataTable<T>({
       </CardHeader>
 
       <CardContent className="p-0">
-        {!loading && filteredData.length === 0 ? (
+        {!loading && sortedData.length === 0 ? (
           <div className="p-6">
             <EmptyState
               title={emptyTitle ?? "No records found"}
@@ -154,12 +191,12 @@ export function DataTable<T>({
                 <thead>
                   <tr className="text-left">
                     {columns.map((column) => (
-                      <th key={column.key} className="px-6 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                      <th key={column.key} className="px-6 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
                         {column.header}
                       </th>
                     ))}
                     {renderRowActions ? (
-                      <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                      <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
                         Actions
                       </th>
                     ) : null}
@@ -184,7 +221,7 @@ export function DataTable<T>({
                         </tr>
                       ))
                     : paginated.map((row, index) => (
-                        <tr key={`row-${index}`} className="transition-colors hover:bg-white/[0.03]">
+                        <tr key={`row-${index}`} className="transition-colors hover:bg-white/[0.02]">
                           {columns.map((column) => (
                             <td key={column.key} className="px-6 py-4 align-top text-sm text-slate-200">
                               {column.render(row)}

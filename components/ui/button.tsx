@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 const variantClasses = {
   primary:
-    "bg-primary text-white shadow-glow hover:bg-primary/90 focus-visible:ring-primary/60 disabled:bg-primary/50",
+    "bg-primary text-white hover:bg-primary/90 focus-visible:ring-primary/60 disabled:bg-primary/50",
   secondary:
     "border border-border/60 bg-card text-foreground hover:bg-card/80 focus-visible:ring-primary/30 disabled:opacity-60",
   ghost: "bg-transparent text-foreground hover:bg-card/70 focus-visible:ring-primary/20",
@@ -36,7 +36,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       ref={ref}
       type={type}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-2xl font-medium outline-none ring-offset-0 transition-transform duration-200 hover:-translate-y-0.5 focus-visible:ring-2 disabled:cursor-not-allowed disabled:transform-none",
+        "inline-flex items-center justify-center gap-2 rounded-2xl font-medium outline-none ring-offset-0 transition-colors duration-200 focus-visible:ring-2 disabled:cursor-not-allowed",
         variantClasses[variant],
         sizeClasses[size],
         className

@@ -93,7 +93,7 @@ export default function DashboardPage() {
       <PageHeader
         badge="Overview"
         title="Dashboard"
-        description="Operational summary from users, products, orders, revenue, and recent activity."
+        description="Live revenue, orders, products, and activity at a glance."
         actions={
           <Button variant="outline" onClick={() => void loadDashboard()}>
             <RefreshCw className="h-4 w-4" />
@@ -108,28 +108,28 @@ export default function DashboardPage() {
         <SummaryCards
           items={[
             {
-              label: "Total Revenue",
+              label: "Revenue",
               value: formatCurrency(dashboard.totals.totalRevenue),
               helper: "Delivered and completed orders.",
               icon: ShoppingBag,
               tone: "primary"
             },
             {
-              label: "Total Orders",
+              label: "Orders",
               value: `${dashboard.totals.totalOrders}`,
-              helper: `${pendingOrders} pending in recent queue.`,
+              helper: `${pendingOrders} pending in the queue.`,
               icon: ShoppingBag,
               tone: "accent"
             },
             {
-              label: "Total Users",
+              label: "Users",
               value: `${dashboard.totals.totalUsers}`,
               helper: `${dashboard.admins.length} admin accounts.`,
               icon: UsersRound,
               tone: "success"
             },
             {
-              label: "Total Products",
+              label: "Products",
               value: `${dashboard.totals.totalProducts}`,
               helper: "Catalog count from products collection.",
               icon: PackageSearch,
@@ -139,11 +139,11 @@ export default function DashboardPage() {
         />
       )}
 
-      <section className="grid gap-6 xl:grid-cols-3">
+      <section className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <Card>
           <CardHeader>
-            <CardTitle>Most Purchased Product</CardTitle>
-            <CardDescription>Top product by sold quantity.</CardDescription>
+            <CardTitle>Top Product</CardTitle>
+            <CardDescription>Best-selling product in the current data set.</CardDescription>
           </CardHeader>
           <CardContent>
             {loading ? (
@@ -151,8 +151,8 @@ export default function DashboardPage() {
             ) : !dashboard.mostPurchasedProduct ? (
               <p className="text-sm text-slate-400">No product sales data available.</p>
             ) : (
-              <div className="flex items-center gap-4 rounded-3xl border border-white/10 bg-white/5 p-4">
-                <div className="h-16 w-16 shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-black/20">
+              <div className="flex items-center gap-4 p-4">
+                <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-lg bg-card">
                   {dashboard.mostPurchasedProduct.images[0] ? (
                     <img
                       src={dashboard.mostPurchasedProduct.images[0]}
@@ -161,9 +161,11 @@ export default function DashboardPage() {
                     />
                   ) : null}
                 </div>
-                <div className="space-y-1">
-                  <p className="font-medium text-white">{dashboard.mostPurchasedProduct.name}</p>
-                  <p className="text-sm text-slate-400">{formatCurrency(dashboard.mostPurchasedProduct.price)}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="truncate font-medium text-white">{dashboard.mostPurchasedProduct.name}</p>
+                  <p className="mt-1 text-sm text-slate-400">{formatCurrency(dashboard.mostPurchasedProduct.price)}</p>
+                </div>
+                <div className="flex-shrink-0">
                   <Badge variant="success">Sold: {dashboard.mostPurchasedProduct.totalSold}</Badge>
                 </div>
               </div>
@@ -173,7 +175,7 @@ export default function DashboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Top User</CardTitle>
+            <CardTitle>Top Customer</CardTitle>
             <CardDescription>Highest spender across order history.</CardDescription>
           </CardHeader>
           <CardContent>
@@ -182,15 +184,22 @@ export default function DashboardPage() {
             ) : !dashboard.topUser ? (
               <p className="text-sm text-slate-400">No user spending data available.</p>
             ) : (
-              <div className="flex items-center justify-between rounded-3xl border border-white/10 bg-white/5 p-4">
-                <div className="flex items-center gap-3">
-                  <Avatar name={dashboard.topUser.name} className="h-10 w-10 rounded-xl text-xs" />
-                  <div className="space-y-1">
-                    <p className="font-medium text-white">{dashboard.topUser.name}</p>
-                    <p className="text-sm text-slate-400">{dashboard.topUser.email}</p>
-                  </div>
+              <div className="flex items-center gap-4 p-4">
+                <Avatar
+                  name={dashboard.topUser.name}
+                  src={
+                    (dashboard.topUser as any)?.avatarUrl || (dashboard.topUser as any)?.image || (dashboard.topUser as any)?.profileImage || null
+                  }
+                  className="h-10 w-10 flex-shrink-0 rounded-lg text-xs"
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="truncate font-medium text-white">{dashboard.topUser.name}</p>
+                  <p className="truncate text-sm text-slate-400">{dashboard.topUser.email}</p>
+                  <p className="mt-1 text-xs text-slate-500">Highest spender in the current data set.</p>
                 </div>
-                <Badge variant="accent">Spent: {formatCurrency(dashboard.topUser.totalSpent)}</Badge>
+                <div className="flex-shrink-0">
+                  <Badge variant="accent" className="text-sm">Spent: {formatCurrency(dashboard.topUser.totalSpent)}</Badge>
+                </div>
               </div>
             )}
           </CardContent>
@@ -198,7 +207,7 @@ export default function DashboardPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Admin Accounts</CardTitle>
+            <CardTitle>Admins</CardTitle>
             <CardDescription>Latest admin records.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -210,7 +219,11 @@ export default function DashboardPage() {
               dashboard.admins.slice(0, 3).map((admin) => (
                 <div key={admin.id} className="rounded-2xl border border-white/10 bg-white/5 px-3 py-3">
                   <div className="flex items-center gap-3">
-                    <Avatar name={admin.name} className="h-9 w-9 rounded-xl text-xs" />
+                    <Avatar
+                      name={admin.name}
+                      src={(admin as any)?.avatarUrl || (admin as any)?.image || null}
+                      className="h-9 w-9 rounded-xl text-xs"
+                    />
                     <div>
                       <div className="flex items-center gap-2">
                         <ShieldCheck className="h-4 w-4 text-primary" />
@@ -226,25 +239,46 @@ export default function DashboardPage() {
         </Card>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-2">
-        {loading ? (
-          <Skeleton className="h-[420px] rounded-3xl" />
-        ) : (
-          <RevenueChart data={revenueChartData} />
-        )}
+      <section className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          {loading ? (
+            <Skeleton className="h-[420px] rounded-2xl" />
+          ) : (
+            <Card>
+              <CardHeader>
+                <CardTitle>Revenue</CardTitle>
+                <CardDescription>Sales over time</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <RevenueChart data={revenueChartData} />
+              </CardContent>
+            </Card>
+          )}
+        </div>
 
-        {loading ? (
-          <Skeleton className="h-[420px] rounded-3xl" />
-        ) : (
-          <OrderStatusChart data={orderStatusData} />
-        )}
+        <div>
+          {loading ? (
+            <Skeleton className="h-[420px] rounded-2xl" />
+          ) : (
+            <Card>
+              <CardHeader>
+                <CardTitle>Order Status</CardTitle>
+                <CardDescription>Distribution of recent order states</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <OrderStatusChart data={orderStatusData} />
+              </CardContent>
+            </Card>
+          )}
+        </div>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-2">
-        <Card className="border-white/15 bg-[#0b1220] shadow-[0_22px_55px_rgba(2,8,23,0.55)]">
+      <section className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <Card>
           <CardHeader>
             <CardTitle>Recent Orders</CardTitle>
-            <CardDescription>Last 5 orders from dashboard response.</CardDescription>
+            <CardDescription>Latest orders from the dashboard response.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             {loading ? (
@@ -286,12 +320,13 @@ export default function DashboardPage() {
               })
             )}
           </CardContent>
-        </Card>
+          </Card>
+        </div>
 
         <Card>
           <CardHeader>
             <CardTitle>Recent Users</CardTitle>
-            <CardDescription>Last 5 created users from dashboard response.</CardDescription>
+            <CardDescription>Newest user accounts from the dashboard response.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             {loading ? (
@@ -301,14 +336,20 @@ export default function DashboardPage() {
             ) : (
               dashboard.recentUsers.map((user) => (
                 <div key={user.id} className="flex items-center justify-between rounded-3xl border border-white/10 bg-white/5 px-4 py-3">
-                  <div className="flex items-center gap-3">
-                    <Avatar name={user.name} className="h-10 w-10 rounded-xl text-xs" />
-                    <div className="space-y-1">
-                      <p className="font-medium text-white">{user.name}</p>
-                      <p className="text-xs text-slate-500">{user.email}</p>
-                    </div>
-                  </div>
-                  <Badge variant="neutral">{formatDate(user.createdAt)}</Badge>
+                  <div className="flex items-center gap-3 min-w-0">
+                        <Avatar
+                          name={user.name}
+                          src={(user as any)?.avatarUrl || (user as any)?.image || (user as any)?.profileImage || null}
+                          className="h-10 w-10 flex-shrink-0 rounded-xl text-xs"
+                        />
+                        <div className="space-y-1 min-w-0">
+                          <p className="truncate font-medium text-white">{user.name}</p>
+                          <p className="truncate text-xs text-slate-500">{user.email}</p>
+                        </div>
+                      </div>
+                      <div className="ml-4 flex-shrink-0">
+                        <Badge variant="neutral" className="text-xs whitespace-nowrap">{formatDate(user.createdAt)}</Badge>
+                      </div>
                 </div>
               ))
             )}
@@ -322,7 +363,7 @@ export default function DashboardPage() {
           <CardDescription>Ranked performance highlights from live dashboard data.</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-3">
-          <div className="rounded-3xl border border-amber-300/20 bg-gradient-to-br from-amber-400/15 to-card/70 p-4">
+          <div className="rounded-lg border border-amber-300/10 bg-card p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Crown className="h-4 w-4 text-amber-300" />
@@ -335,8 +376,7 @@ export default function DashboardPage() {
               Sold: {dashboard.mostPurchasedProduct?.totalSold ?? 0}
             </p>
           </div>
-
-          <div className="rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/15 to-card/70 p-4">
+          <div className="rounded-lg border border-primary/10 bg-card p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <UsersRound className="h-4 w-4 text-primary" />
@@ -349,8 +389,7 @@ export default function DashboardPage() {
               Spend: {formatCurrency(dashboard.topUser?.totalSpent ?? 0)}
             </p>
           </div>
-
-          <div className="rounded-3xl border border-emerald-300/20 bg-gradient-to-br from-emerald-400/15 to-card/70 p-4">
+          <div className="rounded-lg border border-emerald-300/10 bg-card p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <ShieldCheck className="h-4 w-4 text-emerald-300" />

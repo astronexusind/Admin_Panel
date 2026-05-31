@@ -25,6 +25,23 @@ export const userSchema = z.object({
   role: z.string().min(1, "Role is required.")
 });
 
+export const astrologyUserSchema = z
+  .object({
+    name: z.string().min(2, "Name is required."),
+    email: z.string().email("Enter a valid email address."),
+    phone: z.string().min(8, "Phone number is required."),
+    password: z.string().min(6, "Password must be at least 6 characters."),
+    confirmPassword: z.string().min(6, "Confirm your password."),
+    dateOfBirth: z.string().min(4, "Date of birth is required."),
+    timeOfBirth: z.string().min(1, "Time of birth is required."),
+    placeOfBirth: z.string().min(2, "Place of birth is required."),
+    tempChartId: z.string().optional().or(z.literal(""))
+  })
+  .refine((vals) => vals.password === (vals as any).confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords do not match."
+  });
+
 export const orderStatusSchema = z.object({
   status: z.string().min(1, "Status is required.")
 });
@@ -70,6 +87,7 @@ export const passwordUpdateSchema = z
 export type LoginFormValues = z.infer<typeof loginSchema>;
 export type ProductFormValues = z.infer<typeof productSchema>;
 export type UserFormValues = z.infer<typeof userSchema>;
+export type AstrologyUserFormValues = z.infer<typeof astrologyUserSchema>;
 export type OrderStatusFormValues = z.infer<typeof orderStatusSchema>;
 export type CategoryFormValues = z.infer<typeof categorySchema>;
 export type CmsFormValues = z.infer<typeof cmsSchema>;

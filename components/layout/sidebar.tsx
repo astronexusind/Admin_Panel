@@ -3,7 +3,6 @@
 import menu from "@/config/menu.json";
 import {
   BadgePercent,
-  ChevronRight,
   FileText,
   Layers3,
   LayoutDashboard,
@@ -52,18 +51,18 @@ export function Sidebar() {
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex w-[280px] flex-col border-r border-border bg-card/90 px-4 py-5 backdrop-blur-xl transition-transform duration-300 lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 flex w-[280px] flex-col border-r border-border bg-card/95 px-4 py-5 transition-transform duration-300 lg:translate-x-0",
           mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <div className="flex items-center justify-between border-b border-border/80 pb-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-lg font-bold text-primary">
-              A
+            <div className="flex items-center">
+              <img src="/logo.png" alt="AstroNexus" className="h-10 w-10 rounded-md object-cover" />
             </div>
             <div>
               <p className="text-base font-semibold text-white">AstroNexus</p>
-              <p className="text-xs text-slate-400">Admin Panel</p>
+              <p className="text-xs text-slate-400">Admin workspace</p>
             </div>
           </div>
           <Button
@@ -77,7 +76,7 @@ export function Sidebar() {
         </div>
 
         <div className="mt-5 px-2">
-          <p className="text-xs uppercase tracking-[0.16em] text-slate-500">Main Menu</p>
+          <p className="text-xs uppercase tracking-[0.16em] text-slate-500">Navigation</p>
         </div>
 
         <nav className="mt-2 flex-1 space-y-1 overflow-y-auto pr-1">
@@ -92,22 +91,21 @@ export function Sidebar() {
                 onClick={() => setMobileSidebarOpen(false)}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "group flex items-center gap-3 rounded-xl border px-3 py-2.5 transition-all duration-200",
+                  "group flex items-center gap-3 rounded-xl border px-3 py-2.5 transition-colors duration-200",
                   active
-                    ? "border-primary/35 bg-primary/12"
-                    : "border-transparent bg-transparent hover:border-border hover:bg-white/5"
+                      ? "border-primary/30 bg-primary/10"
+                      : "border-transparent bg-transparent hover:border-border hover:bg-white/5"
                 )}
               >
                 <div
                   className={cn(
-                    "rounded-lg p-2",
-                    active ? "bg-primary/20 text-primary" : "bg-white/5 text-slate-400 group-hover:text-foreground"
+                      "rounded-lg p-2",
+                      active ? "bg-primary/15 text-primary" : "bg-white/5 text-slate-400 group-hover:text-foreground"
                   )}
                 >
                   <Icon className="h-4 w-4" />
                 </div>
                 <p className={cn("flex-1 text-sm font-medium", active ? "text-white" : "text-slate-200")}>{item.label}</p>
-                <ChevronRight className={cn("h-4 w-4", active ? "text-primary" : "text-slate-500 group-hover:text-slate-300")} />
               </Link>
             );
           })}

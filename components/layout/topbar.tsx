@@ -1,6 +1,7 @@
 "use client";
 
-import { LogOut, Menu, Shield } from "lucide-react";
+import { LogOut, Menu } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -36,17 +37,16 @@ export function Topbar() {
         <Button variant="ghost" size="icon" className="rounded-2xl lg:hidden" onClick={toggleMobileSidebar}>
           <Menu className="h-5 w-5" />
         </Button>
-        <div>
-          <p className="text-sm text-slate-500">AstroNexus control room</p>
-          <h2 className="text-lg font-semibold text-white">Command your cosmic commerce stack</h2>
+        <div className="flex items-center gap-3">
+          <Image src="/logo.png" alt="AstroNexus" width={40} height={40} className="h-10 w-10 rounded-md object-cover" />
+          <div className="hidden sm:block">
+            <p className="text-sm text-slate-500">AstroNexus Admin</p>
+            <h2 className="text-lg font-semibold text-white">Workspace overview</h2>
+          </div>
         </div>
       </div>
 
       <div className="flex items-center gap-3">
-        <Badge variant="accent" className="hidden sm:inline-flex">
-          <Shield className="mr-1 h-3.5 w-3.5" />
-          Protected Workspace
-        </Badge>
         <ThemeSwitcher compact />
         <div className="hidden items-center gap-3 rounded-3xl border border-white/10 bg-white/5 px-3 py-2 md:flex">
           <Avatar name={admin?.name} />

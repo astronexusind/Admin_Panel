@@ -186,7 +186,7 @@ export function EntityForm<T extends FieldValues>({
       <button
         type="submit"
         disabled={pending}
-        className="inline-flex h-11 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-medium text-white shadow-glow transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-primary/50"
+        className="inline-flex h-11 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-medium text-white transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:bg-primary/50"
       >
         {pending ? "Saving..." : submitLabel}
       </button>

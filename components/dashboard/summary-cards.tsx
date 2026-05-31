@@ -28,18 +28,17 @@ export function SummaryCards({ items, showHelper = true }: { items: SummaryCardI
         const Icon = item.icon;
 
         return (
-          <Card key={item.label} className="overflow-hidden">
-            <CardContent className="p-0">
-              <div className={cn("h-1 w-full bg-gradient-to-r", toneClasses[item.tone ?? "neutral"])} />
-              <div className="flex items-start justify-between gap-4 p-5">
+          <Card key={item.label} className="border-white/10 bg-card/90">
+            <CardContent className="p-5">
+              <div className="flex items-start justify-between gap-4">
                 <div className="space-y-2">
-                  <p className="text-sm text-slate-500">{item.label}</p>
+                  <p className="text-sm font-medium tracking-wide text-slate-400">{item.label}</p>
                   <p className="text-2xl font-semibold text-white">{item.value}</p>
                   {showHelper ? <p className="text-sm leading-6 text-slate-400">{item.helper}</p> : null}
                 </div>
                 <div
                   className={cn(
-                    "rounded-2xl border border-white/10 bg-gradient-to-br p-3",
+                    "rounded-xl border border-white/10 bg-slate-950/40 p-3",
                     toneClasses[item.tone ?? "neutral"]
                   )}
                 >

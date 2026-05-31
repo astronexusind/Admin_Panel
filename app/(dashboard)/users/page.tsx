@@ -10,18 +10,22 @@ import { PageHeader } from "@/components/layout/page-header";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { blockUser, createUser, deleteUser, getAllUsers } from "@/lib/api/users";
+import { blockUser, createAstrologyUser, deleteUser, getAllUsers } from "@/lib/api/users";
 import { getApiErrorMessage } from "@/lib/response-utils";
-import { userSchema, type UserFormValues } from "@/lib/schemas";
+import { astrologyUserSchema, type AstrologyUserFormValues } from "@/lib/schemas";
 import type { User } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
 
-const defaultValues: UserFormValues = {
+const defaultValues: AstrologyUserFormValues = {
   name: "",
   email: "",
   phone: "",
   password: "",
-  role: "user"
+  confirmPassword: "",
+  dateOfBirth: "",
+  timeOfBirth: "",
+  placeOfBirth: "",
+  tempChartId: ""
 };
 
 export default function UsersPage() {
@@ -45,15 +49,28 @@ export default function UsersPage() {
     void loadUsers();
   }, []);
 
-  const handleCreateUser = async (values: UserFormValues) => {
+  const handleCreateUser = async (values: AstrologyUserFormValues) => {
     try {
       setSaving(true);
-      await createUser(values);
-      toast.success("User created.");
+      const payload = {
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
+        password: values.password,
+        astrologyProfile: {
+          dateOfBirth: values.dateOfBirth,
+          timeOfBirth: values.timeOfBirth,
+          placeOfBirth: values.placeOfBirth
+        },
+        ...(values.tempChartId ? { tempChartId: values.tempChartId } : {})
+      };
+
+      await createAstrologyUser(payload);
+      toast.success("Astrology user created.");
       setModalOpen(false);
       await loadUsers();
     } catch (error) {
-      toast.error(getApiErrorMessage(error, "Unable to create user."));
+      toast.error(getApiErrorMessage(error, "Unable to create astrology user."));
     } finally {
       setSaving(false);
     }
@@ -84,10 +101,7 @@ export default function UsersPage() {
   };
 
   const sortedUsers = useMemo(
-    () =>
-      [...users].sort(
-        (left, right) => new Date(right.createdAt ?? 0).getTime() - new Date(left.createdAt ?? 0).getTime()
-      ),
+    () => [...users].sort((left, right) => new Date(right.createdAt ?? 0).getTime() - new Date(left.createdAt ?? 0).getTime()),
     [users]
   );
 
@@ -155,16 +169,10 @@ export default function UsersPage() {
             key: "status",
             header: "Status",
             render: (user) => (
-              <Badge variant={user.isBlocked ? "danger" : "success"}>
-                {user.isBlocked ? "Blocked" : "Active"}
-              </Badge>
+              <Badge variant={user.isBlocked ? "danger" : "success"}>{user.isBlocked ? "Blocked" : "Active"}</Badge>
             )
           },
-          {
-            key: "createdAt",
-            header: "Created",
-            render: (user) => <span className="text-slate-400">{formatDate(user.createdAt)}</span>
-          }
+          { key: "createdAt", header: "Created", render: (user) => <span className="text-slate-400">{formatDate(user.createdAt)}</span> }
         ]}
         renderRowActions={(user) => (
           <>
@@ -183,26 +191,27 @@ export default function UsersPage() {
       <FormModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        title="Create user"
-        description="Name, email, phone, password, role."
-        schema={userSchema}
+        title="Create astrology user"
+        description="Create a normal user with astrology profile details."
+        schema={astrologyUserSchema}
         defaultValues={defaultValues}
         fields={[
           { name: "name", label: "Name", placeholder: "New User" },
           { name: "email", label: "Email", type: "email", placeholder: "newuser@example.com" },
           { name: "phone", label: "Phone", placeholder: "+1234567890" },
           { name: "password", label: "Password", type: "password", placeholder: "password123" },
+          { name: "confirmPassword", label: "Confirm Password", type: "password", placeholder: "password123" },
+          { name: "dateOfBirth", label: "Date of Birth", placeholder: "YYYY-MM-DD" },
+          { name: "timeOfBirth", label: "Time of Birth", placeholder: "HH:MM" },
+          { name: "placeOfBirth", label: "Place of Birth", placeholder: "City, Country" },
           {
-            name: "role",
-            label: "Role",
-            type: "select",
-            options: [
-              { label: "User", value: "user" },
-              { label: "Admin", value: "admin" }
-            ]
+            name: "tempChartId",
+            label: "Temporary chart ID",
+            placeholder: "optional_temp_chart_id",
+            description: "Optional existing temporary birth chart id. Leave empty if you do not have one."
           }
         ]}
-        submitLabel="Create"
+        submitLabel="Create user"
         pending={saving}
         onSubmit={handleCreateUser}
       />

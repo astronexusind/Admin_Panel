@@ -57,14 +57,12 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-10 sm:px-6">
+    <main className="relative grid min-h-screen place-items-center overflow-hidden px-4 py-10 sm:px-6">
       <div className="absolute right-4 top-4 z-20 sm:right-6 sm:top-6">
         <ThemeSwitcher />
       </div>
-      <div className="orb left-[-140px] top-[10%] h-56 w-56 bg-primary/15" />
-      <div className="orb bottom-[-100px] right-[-100px] h-60 w-60 bg-accent/10" />
 
-      <Card className="w-full max-w-md border-white/15 bg-card/95 shadow-[0_20px_50px_rgba(2,8,23,0.55)]">
+      <Card className="relative z-10 w-full max-w-md border-white/15 bg-card/95 shadow-[0_20px_50px_rgba(2,8,23,0.55)]">
         <CardContent className="p-7 sm:p-8">
           <div className="mb-7 flex flex-col items-center space-y-4 text-center">
             <Image src="/logo.png" alt="AstroNexus logo" width={120} height={120} priority className="h-24 w-24" />
