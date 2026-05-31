@@ -1,4 +1,4 @@
-import endpoints from "@/config/endpoints.json";
+import endpoints from "@/config/endpoints";
 import api from "@/lib/axios";
 import { normalizeAdmin } from "@/lib/normalizers";
 import { getArrayFromResponse, getMessageFromResponse, getObjectFromResponse, getString } from "@/lib/response-utils";

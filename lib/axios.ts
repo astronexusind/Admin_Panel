@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import endpoints from "@/config/endpoints.json";
+import endpoints from "@/config/endpoints";
 import { clearStoredAuth, getStoredToken } from "@/lib/storage";
 
 const api = axios.create({

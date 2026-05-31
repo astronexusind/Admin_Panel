@@ -1,4 +1,4 @@
-import endpoints from "@/config/endpoints.json";
+import endpoints from "@/config/endpoints";
 import api from "@/lib/axios";
 import { normalizeDashboardData } from "@/lib/normalizers";
 

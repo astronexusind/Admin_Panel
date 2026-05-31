@@ -1,4 +1,4 @@
-import endpoints from "@/config/endpoints.json";
+import endpoints from "@/config/endpoints";
 import api from "@/lib/axios";
 import { normalizeDiscount } from "@/lib/normalizers";
 import { getArrayFromResponse, getMessageFromResponse } from "@/lib/response-utils";
